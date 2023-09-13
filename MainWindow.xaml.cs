@@ -20,9 +20,14 @@ namespace Star_fighters
     /// </summary>
     public partial class MainWindow : Window
     {
+        Player mainhero;
+        Player mainvillain;
         public MainWindow()
         {
             InitializeComponent();
+            mainhero = new Player(100,10);
+            mainvillain = new Player(100, 10);
+
         }
     }
 }
