@@ -8,16 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="obr\" />
+    <None Remove="obr\Wormonleft.png" />
+    <None Remove="obr\Wormonright.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="obr\Wormonleft.png">
+    <Content Include="obr\Wormonleft.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="obr\Wormonright.png">
+    </Content>
+    <Content Include="obr\Wormonright.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 
 </Project>
