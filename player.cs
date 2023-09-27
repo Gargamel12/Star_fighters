@@ -9,20 +9,17 @@ namespace Star_fighters
 {
     public class Player
     {
-        public int HP { get; set; }
-        public int DMG { get; set; } = 10;
-        public int Angle { get; set; } = 0;
-        public int Speed { get; set; } = 0;
-        public Rectangle HitBox { get; set; }
+        public int HP { get; private set; }
+        public int DMG { get; internal set; } 
+        public int Angle { get; set; } 
+        public int Speed { get; set; } 
+        public Rectangle HitBox { get; set; } 
 
         public Player(int hp, int dmg)
         {
             HP = hp;
             DMG = dmg;
         }
-        public void punch(Player enemy)
-        {
-            enemy.HP -= DMG;
-        }
+        
     }
 }

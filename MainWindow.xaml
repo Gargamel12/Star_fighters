@@ -6,12 +6,7 @@
         xmlns:local="clr-namespace:Star_fighters"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" WindowState="Maximized">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="10*"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Rectangle HorizontalAlignment="Stretch"  Grid.Row="1" Stroke="Black" VerticalAlignment="Stretch" Fill="#DC7633" />
-
-    </Grid>
+    <Canvas Name="canvas" Background="LightBlue" >
+        
+    </Canvas>
 </Window>
