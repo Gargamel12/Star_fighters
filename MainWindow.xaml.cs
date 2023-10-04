@@ -20,28 +20,36 @@ namespace Star_fighters
     /// </summary>
     public partial class MainWindow : Window
     {
-        Player mainhero;
-        Player mainvillain;
+        private Player movingPlayer;
+        private Player player1;
+        private Player player2;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            
-            
+            player1 = new Player(500, 20);
+            player1.HitBox = new Rectangle();
+            player1.HitBox.Width = 110;
+            player1.HitBox.Height = 160;
 
-            mainhero = new Player(100,10);
-            mainhero.HitBox = new Rectangle();
-            mainhero.HitBox.Width = 80;
-            mainhero.HitBox.Height = 160;
+            player2 = new Player(500, 20);
+            player2.HitBox = new Rectangle() { Width = 110, Height = 160 };
 
-            mainvillain = new Player(100, 10);
-            mainvillain.HitBox= new Rectangle();
-            mainvillain.HitBox.Width = 40;
-            mainvillain.HitBox.Height = 80;
-            
-           
-            
+            Random random = new Random();
+            int value = random.Next(0, 2);
+            if (value == 0)
+            {
+                movingPlayer = player1;
+            }
+            else
+            {
+                movingPlayer = player2;
+            }
+
+            this.Loaded += Window_Loaded;
         }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DrawGame();
@@ -49,40 +57,85 @@ namespace Star_fighters
 
         private void DrawGame()
         {
+            canvas.Children.Clear();
             DrawTerrain();
-            DrawPlayer(mainhero);
-            
-            
+            DrawPlayer(player1, true);
+            DrawPlayer(player2, false);
         }
-        private void DrawPlayer(Player player)
-        {
-            Image mainhero = new Image();
-            mainhero.Height = player.HitBox.Height;
-            mainhero.Width = player.HitBox.Width;
-            mainhero.Source = new BitmapImage(new Uri("obr/Wormonleft.png", UriKind.Relative));
-            Canvas.SetBottom(mainhero, canvas.ActualHeight*0.13);
-            Canvas.SetLeft(mainhero, 200);
-            canvas.Children.Add(mainhero);
 
-            Image mainvillain = new Image();
-            mainvillain.Height = player.HitBox.Height;
-            mainvillain.Width = player.HitBox.Width;
-            mainvillain.Source = new BitmapImage(new Uri("obr/Wormonright.png", UriKind.Relative));
-            Canvas.SetBottom(mainvillain, canvas.ActualHeight * 0.13);
-            Canvas.SetRight(mainvillain, 200);
-            canvas.Children.Add(mainvillain);
+        private void DrawPlayer(Player player, bool left)
+        {
+            Image image = new Image();
+            image.Height = player.HitBox.Height;
+            image.Width = player.HitBox.Width;
+            image.Stretch = Stretch.Fill;
+            image.Source = new BitmapImage(new Uri("obr/Wormonleft.png", UriKind.Relative));
+
+            Polygon? polygon = null;
+            if (movingPlayer == player)
+            {
+                polygon = new Polygon();
+                polygon.Points.Add(new Point(0, 0));
+                polygon.Points.Add(new Point(20, 0));
+                polygon.Points.Add(new Point(10, 30));
+                polygon.Fill = Brushes.Red;
+            }
+
+            if (polygon != null)
+            {
+                Canvas.SetBottom(polygon, canvas.ActualHeight * 0.05 + image.Height + 20);
+            }
+            Canvas.SetBottom(image, canvas.ActualHeight * 0.05);
+            if (left)
+            {
+                if (polygon != null)
+                {
+                    Canvas.SetLeft(polygon, image.Width / 2);
+                }
+                Canvas.SetLeft(image, 20);
+            }
+            else
+            {
+                if (polygon != null)
+                {
+                    Canvas.SetRight(polygon, image.Width / 2);
+                }
+                Canvas.SetRight(image, 20);
+                image.LayoutTransform = new ScaleTransform(-1, 1);
+            }
+
+            canvas.Children.Add(image);
+            if (polygon != null)
+            {
+                canvas.Children.Add(polygon);
+            }
+
         }
+
         private void DrawTerrain()
         {
             Rectangle rectangle = new Rectangle();
-            rectangle.Width = canvas.ActualWidth; 
-            rectangle.Height = canvas.ActualHeight*0.2;
+            rectangle.Width = canvas.ActualWidth;
+            rectangle.Height = canvas.ActualHeight * 0.1;
             rectangle.Fill = Brushes.Green;
-            Canvas.SetBottom(rectangle,0);
+
+            Canvas.SetLeft(rectangle, 0);
+            Canvas.SetBottom(rectangle, 0);
 
             canvas.Children.Add(rectangle);
         }
 
-        
+        private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (movingPlayer == player1)
+            {
+                movingPlayer = player2;
+            }
+            else
+            {
+                movingPlayer = player1;
+            }
+            DrawGame();
+        }
     }
 }
