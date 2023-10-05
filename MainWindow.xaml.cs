@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,10 +24,13 @@ namespace Star_fighters
         private Player movingPlayer;
         private Player player1;
         private Player player2;
+        private ShotTrajectory trajectory;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            trajectory = new ShotTrajectory();
 
             player1 = new Player(500, 20);
             player1.HitBox = new Rectangle();
@@ -110,6 +114,11 @@ namespace Star_fighters
                 canvas.Children.Add(polygon);
             }
 
+            if (movingPlayer == player)
+            {
+                DrawTrajectory();
+            }
+
         }
 
         private void DrawTerrain()
@@ -136,6 +145,41 @@ namespace Star_fighters
                 movingPlayer = player1;
             }
             DrawGame();
+        }
+        private void DrawTrajectory()
+        {
+            // Remove the previous trajectory line if it exists
+            foreach (UIElement element in canvas.Children)
+            {
+                if (element is Line)
+                {
+                    canvas.Children.Remove(element);
+                    break;
+                }
+            }
+
+            // Create a line representing the trajectory
+            Line trajectoryLine = new Line();
+            trajectoryLine.Stroke = Brushes.Blue;
+            trajectoryLine.StrokeThickness = 2;
+
+            // Set the starting point (e.g., the player's gun position)
+            double startX = movingPlayer == player1 ? 70 : canvas.ActualWidth - 70;
+            double startY = canvas.ActualHeight * 0.05 + player.HitBox.Height / 2;
+
+            trajectoryLine.X1 = startX;
+            trajectoryLine.Y1 = startY;
+
+            // Calculate the ending point based on the angle and length of the shot
+            double angleInRadians = trajectory.Angle * (Math.PI / 180); // Convert degrees to radians
+            double length = trajectory.Length;
+            double endX = startX + length * Math.Cos(angleInRadians);
+            double endY = startY - length * Math.Sin(angleInRadians); // Negative because Y-axis is inverted in WPF
+
+            trajectoryLine.X2 = endX;
+            trajectoryLine.Y2 = endY;
+
+            canvas.Children.Add(trajectoryLine);
         }
     }
 }
